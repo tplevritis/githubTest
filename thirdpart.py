@@ -1,6 +1,8 @@
 from firstpart import *
 import numpy as np
 from secondpart import OPR, mg
+import matplotlib.pyplot as plt
+
 
 
 ''' _____________Step 1_____________'''
@@ -117,5 +119,32 @@ h = Area / (1 * np.pi * r_stage[0])
 print('\nHeight between each stage is \n', h)
 
 
+#------------
+V_m1 = V_1 * np.cos(alpha_1)
+V_m2 = V_2 * np.cos(alpha_2)
+points = stageno * 2
+V_m = np.ones(points + 1) * V_m1[0]
+dT = (W_1 ** 2 - W_2 ** 2) / (2 * cpa)
+T__2 = T[:-1] + dT[0]
+Tpoints = np.ones(points + 1)
+Tpoints[::2] = T
+Tpoints[1::2] = T__2
+pPoints = np.zeros(points + 1)
+pPoints[0] = P0
+for i in range(points):
+    p_new = pPoints[i] * (Tpoints[i+1]/Tpoints[i])**(eta_p*ga/(ga-1))
+    pPoints[i+1] = p_new
+rhoPoints = pPoints / (Rspecific * Tpoints)
+AreaPoints = mg / (rhoPoints * V_m)
+hPoints = AreaPoints / (1 * np.pi * r_stage[0])
+
+print('\nTotal temperature between each stage is \n', T)
+print('\nTotal temperature between each point is \n', Tpoints)
+print('\nTotal pressure between each stage is \n', p)
+print('\nTotal pressure between each point is \n', pPoints)
+print('\nHeight between each stage is \n', h)
+print('\nHeight between each point is \n', hPoints)
 
 
+plt.plot(Tpoints, pPoints)
+plt.show()
